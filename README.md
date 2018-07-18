@@ -1,9 +1,10 @@
 # Servicio Bienes Raices API
 
 ## Integrantes
-- Laura
+### Grupo 6
+- Laura Katherine Salazar Higuita
 - Luis Fernando Moreno Oviedo
-- Katherine 
+- Katherine Mancera Arango 
 
 ## Overview  
 Crea la Api basado en tipo de inmuebles(Casa, Apartamento...), inmuebles y negociacion(compra, venta, arriendo)
