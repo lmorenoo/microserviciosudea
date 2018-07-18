@@ -1,7 +1,7 @@
 # Servicio Bienes Raices API
 
 ## Integrantes
-- Laura
+- Laura Salazar Higuita
 - Luis Fernando Moreno Oviedo
 - Katherine 
 
