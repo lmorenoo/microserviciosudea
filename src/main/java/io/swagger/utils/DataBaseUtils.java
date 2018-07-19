@@ -40,10 +40,12 @@ public class DataBaseUtils {
 		Negocio negocio2 = new Negocio("neg222", "ref4567", "compra", 540);
 		Negocio negocio3 = new Negocio("neg333", "ref8790", "compra", 484);
 		Negocio negocio4 = new Negocio("neg444", "ref9874", "venta", 4700);
+    Negocio negocio5 = new Negocio("neg888", "ref1234", "renta", 1000);
 		negocios.add(negocio1);
 		negocios.add(negocio2);
 		negocios.add(negocio3);
 		negocios.add(negocio4);
+    negocios.add(negocio5);
 	}
 
 	public static List<TipoInmueble> getTipoInmuebles() {

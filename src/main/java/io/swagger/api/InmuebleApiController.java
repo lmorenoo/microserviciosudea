@@ -4,6 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -40,7 +41,8 @@ public class InmuebleApiController implements InmuebleApi {
 		this.request = request;
 	}
 
-	public ResponseEntity<Void> agregarInmueble(
+	@Override
+  public ResponseEntity<Void> agregarInmueble(
 			@ApiParam(value = "ID del inmueble a buscar", required = true) @PathVariable("idInmueble") String idInmueble,
 			@ApiParam(value = "inmueble a agregar") @Valid @RequestBody Inmueble inmueble) {
 		boolean isCreated = DataBaseUtils.crearInmueble(inmueble);
@@ -50,7 +52,8 @@ public class InmuebleApiController implements InmuebleApi {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<Inmueble> buscarInmueble(
+	@Override
+  public ResponseEntity<Inmueble> buscarInmueble(
 			@ApiParam(value = "ID del inmueble a buscar", required = true) @PathVariable("idInmueble") String idInmueble) {
 		Inmueble inmueble = DataBaseUtils.getInmueble(idInmueble);
 		if (inmueble == null) {
@@ -84,11 +87,11 @@ public class InmuebleApiController implements InmuebleApi {
 
 	@Override
 	public List<Negocio> listarNegocios(@ApiParam(value = "ID del inmueble a buscar",required=true) @PathVariable("idInmueble") String idInmueble) {
-		List<Negocio> negocios = DataBaseUtils.getNegocios();
-		
-		negocios.forEach(
-				negocio -> negocio.add(linkTo(NegocioApi.class).slash(negocio.getIdNegocio()).withSelfRel()));
-		return negocios;
+    List<Negocio> negocios = DataBaseUtils.getNegocios();
+    return negocios.stream().filter(negocio -> idInmueble.equals(negocio.getIdInmueble())).map(neg -> {
+      neg.add(linkTo(NegocioApi.class).slash(neg.getIdNegocio()).withSelfRel());
+      return neg;
+    }).collect(Collectors.toList());
 	}
 
 }
