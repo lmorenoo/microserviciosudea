@@ -2,6 +2,12 @@ package io.swagger.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.ResourceSupport;
@@ -15,25 +21,33 @@ import io.swagger.annotations.ApiModelProperty;
  * Negocio
  */
 @Validated
-
+@Entity
+@Table(name = "negocio")
 public class Negocio extends ResourceSupport {
+
 	@JsonProperty("idInmueble")
-	private String idInmueble = null;
+	@ManyToOne
+    @JoinColumn(name = "INMUEBLEID")
+	private Inmueble idInmueble;
 
 	@JsonProperty("idNegocio")
-	private String idNegocio = null;
+	@Column(name = "ID")
+	@Id
+	private String idNegocio;
 
 	@JsonProperty("tipoNegocio")
-	private String tipoNegocio = null;
+	@Column(name = "tiponegocio")
+	private String tipoNegocio;
 
 	@JsonProperty("valor")
-	private Integer valor = null;
+	@Column(name = "valor")
+	private Integer valor;
 
 	public Negocio() {
 		super();
 	}
 
-	public Negocio(String idNegocio, String idInmueble, String tipoNegocio, Integer valor) {
+	public Negocio(String idNegocio, Inmueble idInmueble, String tipoNegocio, Integer valor) {
 		super();
 		this.idNegocio = idNegocio;
 		this.idInmueble = idInmueble;
@@ -41,7 +55,7 @@ public class Negocio extends ResourceSupport {
 		this.valor = valor;
 	}
 
-	public Negocio idInmueble(String idInmueble) {
+	public Negocio idInmueble(Inmueble idInmueble) {
 		this.idInmueble = idInmueble;
 		return this;
 	}
@@ -54,11 +68,11 @@ public class Negocio extends ResourceSupport {
 	@ApiModelProperty(example = "apt123", required = true, value = "")
 	@NotNull
 
-	public String getIdInmueble() {
+	public Inmueble getIdInmueble() {
 		return idInmueble;
 	}
 
-	public void setIdInmueble(String idInmueble) {
+	public void setIdInmueble(Inmueble idInmueble) {
 		this.idInmueble = idInmueble;
 	}
 

@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.Inmueble;
 import io.swagger.model.Negocio;
-import io.swagger.utils.DataBaseUtils;
+import io.swagger.repository.InmuebleRepository;
+import io.swagger.repository.NegocioRepository;
 
 @Controller
 public class InmuebleApiController implements InmuebleApi {
@@ -35,63 +37,65 @@ public class InmuebleApiController implements InmuebleApi {
 
 	private final HttpServletRequest request;
 
-	@org.springframework.beans.factory.annotation.Autowired
-	public InmuebleApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+	private InmuebleRepository inmuebleRepository;
+	
+	private NegocioRepository negocioRepository;
+
+	@Autowired
+	public InmuebleApiController(ObjectMapper objectMapper, HttpServletRequest request,
+			InmuebleRepository inmuebleRepository, NegocioRepository negocioRepository) {
 		this.objectMapper = objectMapper;
 		this.request = request;
+		this.inmuebleRepository = inmuebleRepository;
+		this.negocioRepository = negocioRepository;
 	}
 
 	@Override
-  public ResponseEntity<Void> agregarInmueble(
+	public ResponseEntity<Void> agregarInmueble(
 			@ApiParam(value = "ID del inmueble a buscar", required = true) @PathVariable("idInmueble") String idInmueble,
 			@ApiParam(value = "inmueble a agregar") @Valid @RequestBody Inmueble inmueble) {
-		boolean isCreated = DataBaseUtils.crearInmueble(inmueble);
-		if (!isCreated) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		inmuebleRepository.save(inmueble);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@Override
-  public ResponseEntity<Inmueble> buscarInmueble(
+	public ResponseEntity<Inmueble> buscarInmueble(
 			@ApiParam(value = "ID del inmueble a buscar", required = true) @PathVariable("idInmueble") String idInmueble) {
-		Inmueble inmueble = DataBaseUtils.getInmueble(idInmueble);
+		Inmueble inmueble = inmuebleRepository.findOne(idInmueble);
 		if (inmueble == null) {
 			return new ResponseEntity<Inmueble>(HttpStatus.NOT_FOUND);
 		}
 		// agregar hypermedia
 		inmueble.add(linkTo(InmuebleApi.class).slash(inmueble.getIdInmueble()).withSelfRel());
 
-		//asignar referencia a negocio
-        List<Negocio> linkBuilder = methodOn(InmuebleApiController.class).listarNegocios(inmueble.getIdInmueble());
-        Link negocioLink = linkTo(linkBuilder).withRel("listarNegocios");
-        inmueble.add(negocioLink);
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setExpires(1000);
-        headers.set("Mi-header", "valor 5");
-        
-        return new ResponseEntity<Inmueble>(inmueble, headers, HttpStatus.OK);
+		// asignar referencia a negocio
+		List<Negocio> linkBuilder = methodOn(InmuebleApiController.class).listarNegocios(inmueble.getIdInmueble());
+		Link negocioLink = linkTo(linkBuilder).withRel("listarNegocios");
+		inmueble.add(negocioLink);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setExpires(1000);
+		headers.set("Mi-header", "valor 5");
+
+		return new ResponseEntity<Inmueble>(inmueble, headers, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<Void> removerInmueble(
 			@ApiParam(value = "ID del inmueble a buscar", required = true) @PathVariable("idInmueble") String idInmueble,
 			@ApiParam(value = "inmueble a remover") @Valid @RequestBody Inmueble inmueble) {
-		boolean isRemoved = DataBaseUtils.removerInmueble(inmueble);
-		if (!isRemoved) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		inmuebleRepository.delete(inmueble);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Override
-	public List<Negocio> listarNegocios(@ApiParam(value = "ID del inmueble a buscar",required=true) @PathVariable("idInmueble") String idInmueble) {
-    List<Negocio> negocios = DataBaseUtils.getNegocios();
-    return negocios.stream().filter(negocio -> idInmueble.equals(negocio.getIdInmueble())).map(neg -> {
-      neg.add(linkTo(NegocioApi.class).slash(neg.getIdNegocio()).withSelfRel());
-      return neg;
-    }).collect(Collectors.toList());
+	public List<Negocio> listarNegocios(
+			@ApiParam(value = "ID del inmueble a buscar", required = true) @PathVariable("idInmueble") String idInmueble) {
+		List<Negocio> negocios = negocioRepository.findAll();
+		return negocios.stream().filter(negocio -> idInmueble.equals(negocio.getIdInmueble())).map(neg -> {
+			neg.add(linkTo(NegocioApi.class).slash(neg.getIdNegocio()).withSelfRel());
+			return neg;
+		}).collect(Collectors.toList());
 	}
 
 }

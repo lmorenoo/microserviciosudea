@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.TipoInmueble;
-import io.swagger.utils.DataBaseUtils;
+import io.swagger.repository.TipoInmuebleRepository;
 
 @Controller
 public class TipoInmuebleApiController implements TipoInmuebleApi {
@@ -28,32 +29,33 @@ public class TipoInmuebleApiController implements TipoInmuebleApi {
 
 	private final HttpServletRequest request;
 
-	@org.springframework.beans.factory.annotation.Autowired
-	public TipoInmuebleApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+	private TipoInmuebleRepository tipoInmuebleRepository;
+
+	@Autowired
+	public TipoInmuebleApiController(ObjectMapper objectMapper, HttpServletRequest request,
+			TipoInmuebleRepository tipoInmuebleRepository) {
 		this.objectMapper = objectMapper;
 		this.request = request;
+		this.tipoInmuebleRepository = tipoInmuebleRepository;
 	}
 
 	public ResponseEntity<Void> agregarTipoInmueble(
 			@ApiParam(value = "ID del tipo de inmueble a buscar", required = true) @PathVariable("idTipoInmueble") String idTipoInmueble,
 			@ApiParam(value = "tipo inmueble a agregar") @Valid @RequestBody TipoInmueble tipoInmueble) {
-		boolean isCreated = DataBaseUtils.crearTipoInmueble(tipoInmueble);
-		if (!isCreated) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		tipoInmuebleRepository.save(tipoInmueble);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	public ResponseEntity<TipoInmueble> buscarTipoInmueble(
 			@ApiParam(value = "ID del tipo de inmueble a buscar", required = true) @PathVariable("idTipoInmueble") String idTipoInmueble) {
-		TipoInmueble tipoInmueble = DataBaseUtils.getTipoInmueble(idTipoInmueble);
+		TipoInmueble tipoInmueble = tipoInmuebleRepository.findOne(idTipoInmueble);
 		if (tipoInmueble == null) {
 			return new ResponseEntity<TipoInmueble>(HttpStatus.NOT_FOUND);
 		}
-		
-		//agregar hypermedia
+
+		// agregar hypermedia
 		tipoInmueble.add(linkTo(TipoInmuebleApi.class).slash(tipoInmueble.getIdTipoInmueble()).withSelfRel());
-        
+
 		return ResponseEntity.ok(tipoInmueble);
 	}
 

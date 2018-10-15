@@ -23,24 +23,24 @@ public class DataBaseUtils {
 		tipoInmuebles.add(tipoInmueble3);
 		tipoInmuebles.add(tipoInmueble4);
 
-		Inmueble inmueble1 = new Inmueble("tpa123", "ref1234", "Royal Dec", "Avenida Siempreviva 742", "Antioquia",
+		Inmueble inmueble1 = new Inmueble(tipoInmueble1, "ref1234", "Royal Dec", "Avenida Siempreviva 742", "Antioquia",
 				1000, 2000, "11111");
-		Inmueble inmueble2 = new Inmueble("tpc123", "ref4567", "Finca la Rosita", "Avenida Siempreviva 743", "Cordoba",
+		Inmueble inmueble2 = new Inmueble(tipoInmueble2, "ref4567", "Finca la Rosita", "Avenida Siempreviva 743", "Cordoba",
 				500, 600, "22222");
-		Inmueble inmueble3 = new Inmueble("tpf123", "ref8790", "TuCancun", "Avenida Siempreviva 744", "Cundinamarca",
+		Inmueble inmueble3 = new Inmueble(tipoInmueble3, "ref8790", "TuCancun", "Avenida Siempreviva 744", "Cundinamarca",
 				444, 500, "33333");
-		Inmueble inmueble4 = new Inmueble("tpb123", "ref9874", "Island Caribb", "Avenida Siempreviva 745", "Antioquia",
+		Inmueble inmueble4 = new Inmueble(tipoInmueble4, "ref9874", "Island Caribb", "Avenida Siempreviva 745", "Antioquia",
 				4500, 5000, "44444");
 		inmuebles.add(inmueble1);
 		inmuebles.add(inmueble2);
 		inmuebles.add(inmueble3);
 		inmuebles.add(inmueble4);
 
-		Negocio negocio1 = new Negocio("neg111", "ref1234", "renta", 1200);
-		Negocio negocio2 = new Negocio("neg222", "ref4567", "compra", 540);
-		Negocio negocio3 = new Negocio("neg333", "ref8790", "compra", 484);
-		Negocio negocio4 = new Negocio("neg444", "ref9874", "venta", 4700);
-    Negocio negocio5 = new Negocio("neg888", "ref1234", "renta", 1000);
+		Negocio negocio1 = new Negocio("neg111", inmueble1, "renta", 1200);
+		Negocio negocio2 = new Negocio("neg222", inmueble2, "compra", 540);
+		Negocio negocio3 = new Negocio("neg333", inmueble3, "compra", 484);
+		Negocio negocio4 = new Negocio("neg444", inmueble4, "venta", 4700);
+    Negocio negocio5 = new Negocio("neg888", inmueble1, "renta", 1000);
 		negocios.add(negocio1);
 		negocios.add(negocio2);
 		negocios.add(negocio3);

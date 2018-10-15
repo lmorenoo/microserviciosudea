@@ -2,6 +2,12 @@ package io.swagger.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.ResourceSupport;
@@ -15,37 +21,49 @@ import io.swagger.annotations.ApiModelProperty;
  * Inmueble
  */
 @Validated
-
+@Entity
+@Table(name = "inmueble")
 public class Inmueble extends ResourceSupport {
+
 	@JsonProperty("idTipoInmueble")
-	private String idTipoInmueble = null;
+	@ManyToOne
+	@JoinColumn(name = "TIPOINMUEBLEID")
+	private TipoInmueble idTipoInmueble;
 
 	@JsonProperty("idInmueble")
-	private String idInmueble = null;
+	@Column(name = "ID")
+	@Id
+	private String idInmueble;
 
 	@JsonProperty("nombre")
-	private String nombre = null;
+	@Column(name = "nombre")
+	private String nombre;
 
 	@JsonProperty("direccion")
-	private String direccion = null;
+	@Column(name = "direccion")
+	private String direccion;
 
 	@JsonProperty("region")
-	private String region = null;
+	@Column(name = "region")
+	private String region;
 
 	@JsonProperty("precioMinimo")
-	private Integer precioMinimo = null;
+	@Column(name = "preciominimo")
+	private Integer precioMinimo;
 
 	@JsonProperty("precioMaximo")
-	private Integer precioMaximo = null;
+	@Column(name = "preciomaximo")
+	private Integer precioMaximo;
 
 	@JsonProperty("telefono")
-	private String telefono = null;
-	
+	@Column(name = "telefono")
+	private String telefono;
+
 	public Inmueble() {
 		super();
 	}
 
-	public Inmueble(String idTipoInmueble, String idInmueble, String nombre, String direccion, String region,
+	public Inmueble(TipoInmueble idTipoInmueble, String idInmueble, String nombre, String direccion, String region,
 			Integer precioMinimo, Integer precioMaximo, String telefono) {
 		super();
 		this.idTipoInmueble = idTipoInmueble;
@@ -58,7 +76,7 @@ public class Inmueble extends ResourceSupport {
 		this.telefono = telefono;
 	}
 
-	public Inmueble idTipoInmueble(String idTipoInmueble) {
+	public Inmueble idTipoInmueble(TipoInmueble idTipoInmueble) {
 		this.idTipoInmueble = idTipoInmueble;
 		return this;
 	}
@@ -71,11 +89,11 @@ public class Inmueble extends ResourceSupport {
 	@ApiModelProperty(example = "apt1234", required = true, value = "")
 	@NotNull
 
-	public String getIdTipoInmueble() {
+	public TipoInmueble getIdTipoInmueble() {
 		return idTipoInmueble;
 	}
 
-	public void setIdTipoInmueble(String idTipoInmueble) {
+	public void setIdTipoInmueble(TipoInmueble idTipoInmueble) {
 		this.idTipoInmueble = idTipoInmueble;
 	}
 

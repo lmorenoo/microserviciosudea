@@ -2,6 +2,10 @@ package io.swagger.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.ResourceSupport;
@@ -15,13 +19,18 @@ import io.swagger.annotations.ApiModelProperty;
  * TipoInmueble
  */
 @Validated
-
+@Entity
+@Table(name = "tipoinmueble")
 public class TipoInmueble extends ResourceSupport {
+
 	@JsonProperty("idTipoInmueble")
-	private String idTipoInmueble = null;
+	@Column(name = "ID")
+	@Id
+	private String idTipoInmueble;
 
 	@JsonProperty("nombre")
-	private String nombre = null;
+	@Column(name = "nombre")
+	private String nombre;
 
 	public TipoInmueble() {
 
