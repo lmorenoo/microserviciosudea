@@ -26,13 +26,15 @@ services:
     depends_on:
       - mysql
     environment:
-      - MYSQL_INSTANCE=mysql:3306
+      - MYSQL_INSTANCE=mysql:3307
     ports:
       - "8081:8081"
     networks:
       - network1
     deploy:
       replicas: 1
-
+    links:
+     - mysql
+     
 networks:
   network1:
