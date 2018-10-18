@@ -10,7 +10,7 @@ services:
       - MYSQL_DATABASE=db_inmueble
       - MYSQL_USER=user
       - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_PASSWORD = password
+      - MYSQL_PASSWORD=password
     networks:
       - network1
     deploy:
